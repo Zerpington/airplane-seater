@@ -97,13 +97,21 @@ class SeatPlanner
         end
     end
 
+    def passenger_seater (plane_layout)
+        print "Now boarding Flight Zerpington!"
+        plane_layout
+    end
+
     def plan_seat
         plane_layout = []
         @seats.each.with_index(1) do |seat, i|
             block =  block_maker(seat, i)
             plane_layout.append(block)
         end
-        return plane_layout
+
+        boarded_plane = passenger_seater(plane_layout)
+
+        return boarded_plane
     end
 
 end
