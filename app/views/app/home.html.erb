@@ -1,1 +1,67 @@
-<h1>Hello World</h1>
+<body>
+    <div class="app">
+
+        <h1>Airplane Seater</h1>
+
+        <form action="/api/seat/" method="post" accept-charset="UTF-8" >
+            <div class="form">
+                <label for="seats">Input plane array:</label>
+                </br>
+                <input id="seats" name="seats" type="text" placeholder="[[3,2], [4,3], [2,3], [3,4]]" />
+                </br>
+                <label for="passengers">How many passengers?</label>
+                </br>
+                <input id="passengers" name="passengers" type="text" placeholder="30" />
+                </br>
+                <input class="button" name="commit" type="submit" value="Submit" data-disable-with="Search" />
+            </div>
+        </form>
+
+        <div>
+            <h3>Rules:</h3>
+            <ul>
+                Dont input anything except for integers
+                </br>
+                </br>
+                Format Plane Array as [[10,3],[1,3]]
+                
+            </ul>
+            
+        </div>
+    </div>
+
+</body>
+
+<style>
+    h1 {
+        color:black
+    }
+    .app {
+        margin: auto;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center
+    }
+    form {
+        display: flex;
+        
+        flex-direction: column;
+        justify-content: center
+    }
+    label {
+        padding: 5px
+    }
+    input {
+        width: 300px;
+        padding: 5px;
+        margin: 10px
+    }
+    .button {
+        margin-top: 25px;
+        width: 100px
+    }
+</style>
+
+<script>
+</script>

@@ -4,7 +4,7 @@ A work exam application done with love and a bottomless coffee cup. A Junior Dev
 
 
 ## How the Application Works
-Send a post request with params as such
+Send a post request with params (seats, passengers) as such to `/api/seat/`
 ```
 /api/seat/?seats=[[3,2], [4,3], [2,3], [3,4]]&passengers=30
 ```
@@ -35,7 +35,7 @@ which will return
     ]
 }
 ```
-
+* Also made a simple front view at the url root of the app which you can use to get the json output
 
 ## Installation
 

@@ -1,9 +1,10 @@
 class SeatController < ApplicationController
-    def index
+    def home
         print "Hello World"
     end
     def show
         params = self.params
+        
         seats = JSON.parse(params["seats"])
         passengers = params["passengers"].to_i
 
@@ -11,7 +12,7 @@ class SeatController < ApplicationController
         if seat_planner.seat_verification
             payload = Hash.new
             plane_layout = seat_planner.plan_seat
-            
+
             payload = {
                 "plane_layout": plane_layout
             }

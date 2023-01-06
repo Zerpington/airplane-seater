@@ -38,7 +38,19 @@ class SeatPlanner
                 print "Error: Seat Format - Non-Integer"
                 return false
             end
+            unless seat[0].is_a? Integer
+                print "Error: Seat Format - Not an Integer"
+                return false
+            end
+            unless seat[1].is_a? Integer
+                print "Error: Seat Format - Not an Integer"
+                return false
+            end
             total_seats += seat.inject(:*)
+        end
+        unless @passengers.is_a? Integer
+            print "Error: Passengers is not an Integer"  
+            return false
         end
         unless total_seats >= @passengers
             print "Error: Too many Passengers"  
@@ -70,15 +82,21 @@ class SeatPlanner
         rows = seat[1]
         # assign seat: W=Window, M=Middle, A=Aisle 
         # seat = [3, 2] = [[[W],[M],[A]],[W],[M],[A]]]
-        if i == 1
-            row = row_maker(["W"],["A"], seat)
-        elsif i == @seats.length
-            row = row_maker(["A"],["W"], seat)
-        else
-            row = row_maker(["A"],["A"], seat)
-        end
-        if seat[1] > @max_rows
+
+        if @seats.length == 1
+            row = row_maker(["W"],["W"], seat)
             @max_rows = seat[1]
+        else
+            if i == 1
+                row = row_maker(["W"],["A"], seat)
+            elsif i == @seats.length
+                row = row_maker(["A"],["W"], seat)
+            else
+                row = row_maker(["A"],["A"], seat)
+            end
+            if seat[1] > @max_rows
+                @max_rows = seat[1]
+            end
         end
         rows.times{block.push(row)}
 
@@ -107,7 +125,6 @@ class SeatPlanner
                 end
             end
         end
-        print plane
         return plane
     end
 
@@ -122,7 +139,7 @@ class SeatPlanner
 
         plane = create_plane
         plane = add_passengers(plane_layout, plane)
-
+        
         return plane
     end
 end
