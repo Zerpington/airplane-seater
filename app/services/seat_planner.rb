@@ -1,109 +1,128 @@
 class SeatPlanner
-    def initialize
-        @seats = [[3,2], [4,3], [2,3], [3,4]]
+    def initialize(seats, passengers)
+        @seats = seats
+        @passengers = passengers
+    # def initialize
+    #     @seats = [[3,2], [4,3], [2,3], [3,4]]
+    #     # 36seats
+    #     @passengers = 30
+        # @seats = [[3, 2], [3, 2]]
+        # @passengers = 12
+
+        # @seats = [[1, 3]]
+        # @seats = [[3,4], [4,3], [2,3], [3,2]]
         # possible test cases for later
         # @seats = [[3,2], [4,3], [2,3], [0, 1]]
         # @seats = [[3,2], [4,3], [2,3], [2, nil]]
         # @seats = [[3,2], [4,3], [2,3], [2]]
         # @seats = [[3,2], [4,3], [2,3], [1, "a"]]
-        @passengers = 30
+        # @seats = ["12", [4,3], [2,3], [1, "a"]]
     end
 
     def seat_verification
         total_seats = 0
-        @seats.map { |seat|
+        @seats.map do |seat|
+            unless seat.is_a? Array
+                print "Error: Seat Format - Not an Array"
+                return false
+            end
             unless seat.length == 2
-                # render json: {}, status: :unprocessable_entity
                 print "Error: Seat Format - Array length not followed"
                 return false
             end
             unless seat.exclude? 0 || nil
-                # render json: {}, status: :unprocessable_entity
                 print "Error: Seat Format - Includes 0/nil"
                 return false
             end
             unless seat.all? {|i| i.is_a?(Integer) }
-                # render json: {}, status: :unprocessable_entity
                 print "Error: Seat Format - Non-Integer"
                 return false
             end
             total_seats += seat.inject(:*)
-        }
-        unless total_seats > @passengers
+        end
+        unless total_seats >= @passengers
             print "Error: Too many Passengers"  
             return false
-            # flash[:alert] = "Seating Error"
         else
             print "Seats Verified"
             return true
         end
     end
 
-    def block_maker (seat, i)
-        # assign seat: W=Window, M=Middle, A=Aisle 
-        if i == 1
-            # seat = [3, 2] = [[[W],[M],[A]],[W],[M],[A]]]
-            case seat[0]
-            when 1
-                row = [["W"]]
-            when 2
-                row = [["W"],["A"]]
-            else
-                middle_seats = seat[0]-2
-                row = [["W"],["A"]]
-                middle_seats.times{
-                    row.insert(1,["M"])
-                }
-            end
-            block = []
-            seat[1].times{block.push(row)}
-            return block
-
-        elsif i == @seats.length
-            case seat[0]
-            when 1
-                row = [["A"]]
-            when 2
-                row = [["A"],["W"]]
-            else
-                middle_seats = seat[0]-2
-                row = [["A"],["W"]]
-                middle_seats.times{
-                    row.insert(1,["M"])
-                }
-            end
-
-            block = []
-            rows = seat[1]
-            rows.times{block.push(row)}
-            
-            return block
+    def row_maker(first, last, seat)
+        case seat[0]
+        when 1
+            row = [first]
+        when 2
+            row = [first,last]
         else
-            case seat[0]
-            when 1
-                row = [["A"]]
-            when 2
-                row = [["A"],["A"]]
-            else
-                middle_seats = seat[0]-2
-                row = [["A"],["A"]]
-                middle_seats.times{
-                    row.insert(1,["M"])
-                }
-            end
-            block = []
-            seat[1].times{block.push(row)}
-            return block
+            middle_seats = seat[0]-2
+            row = [first,last]
+            middle_seats.times{
+                row.insert(1,["M"])
+            }
         end
+        return row
+    end
+
+    def create_block (seat, i)
+        block = []
+        rows = seat[1]
+        # assign seat: W=Window, M=Middle, A=Aisle 
+        # seat = [3, 2] = [[[W],[M],[A]],[W],[M],[A]]]
+        if i == 1
+            row = row_maker(["W"],["A"], seat)
+        elsif i == @seats.length
+            row = row_maker(["A"],["W"], seat)
+        else
+            row = row_maker(["A"],["A"], seat)
+        end
+        if seat[1] > @max_rows
+            @max_rows = seat[1]
+        end
+        rows.times{block.push(row)}
+
+        return block
+    end
+
+    def create_plane
+        @seats.map { |seat| Array.new(seat[1]) { Array.new(seat[0]) } }
+    end
+
+    def add_passengers (plane_layout, plane)
+        seat_number = 1
+        [["A"],["W"],["M"]].each do |seat_type|
+            for row in 0..(@max_rows-1) do
+                plane_layout.each_with_index do |block, b|
+                    next if block[row].nil?
+                    block[row].each_with_index do |seat, s|
+                        next if seat != seat_type
+                        if seat_number <= @passengers
+                            plane[b][row][s] = [seat[0], seat_number]
+                            seat_number+=1
+                        else
+                            plane[b][row][s] = [seat[0], nil]
+                        end
+                    end
+                end
+            end
+        end
+        print plane
+        return plane
     end
 
     def plan_seat
         plane_layout = []
+        @max_rows = 0
+
         @seats.each.with_index(1) do |seat, i|
-            block =  block_maker(seat, i)
+            block =  create_block(seat, i)
             plane_layout.append(block)
         end
-        return plane_layout
-    end
 
+        plane = create_plane
+        plane = add_passengers(plane_layout, plane)
+
+        return plane
+    end
 end

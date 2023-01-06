@@ -1,23 +1,23 @@
 class SeatController < ApplicationController
     def index
-        if SeatPlanner.new.seat_verification
+        print "Hello World"
+    end
+    def show
+        params = self.params
+        seats = JSON.parse(params["seats"])
+        passengers = params["passengers"].to_i
+
+        seat_planner = SeatPlanner.new( seats, passengers )
+        if seat_planner.seat_verification
             payload = Hash.new
-            # make new array and stuff
-            # W=Window, M=Middle, A=Aisle
-            # Goal: [[[G,3],[R, 2],[B,1]],[[G,3],[R, 2],[B,1]]] etc or something
-            plane_layout = SeatPlanner.new.plan_seat
+            plane_layout = seat_planner.plan_seat
             
             payload = {
                 "plane_layout": plane_layout
             }
-
-            print payload
             render json: payload, status: :ok
         else
             render json: {}, status: :unprocessable_entity
         end
-    end
-
-    def show
     end
 end
