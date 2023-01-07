@@ -1,4 +1,4 @@
-# airplane-seater V1.0
+# airplane-seater V1.1
 ### Introduction
 A work exam application done with love and a bottomless coffee cup. A Junior Dev with the willingness to learn.
 
@@ -50,3 +50,7 @@ rails s
 ```
 
 ## Unit Test
+RSpec gem is used for unit test. Use this command on the console to run tests
+```
+bundle exec rspec
+```
