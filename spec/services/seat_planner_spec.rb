@@ -56,8 +56,8 @@ RSpec.describe SeatPlanner do
     end
 
     describe "#verify_seats" do
-        subject { described_class.new(seats, passengers).verify_seat }
-        let(:result) { true }
+        subject { described_class.new(seats, passengers).verify_seats }
+        let(:result) { [true, "Success"] }
         
         it "returns true" do
             expect(subject).to eq(result)
