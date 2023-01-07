@@ -19,46 +19,29 @@ class SeatPlanner
         # @seats = ["12", [4,3], [2,3], [1, "a"]]
     end
 
-    def seat_verification
+    def verify_seats
+        return [false, "Seats - Not an Array"] unless @seats.is_a? Array 
+        return [false, "Passengers is not an Integer"] unless @passengers.is_a? Integer
+
         total_seats = 0
-        @seats.map do |seat|
+
+        @seats.each do |seat|
             unless seat.is_a? Array
-                print "Error: Seat Format - Not an Array"
-                return false
+                return [false, "Seat Format - Not an Array"]
             end
-            unless seat.length == 2
-                print "Error: Seat Format - Array length not followed"
-                return false
+            if seat.length != 2 
+                return [false, "Seat Format - Array length not followed"]
             end
-            unless seat.exclude? 0 || nil
-                print "Error: Seat Format - Includes 0/nil"
-                return false
+            if seat.any? { |i| !i.is_a?(Integer) || i < 1 }
+                return [false, "Seat Format - Array elements not valid"]
             end
-            unless seat.all? {|i| i.is_a?(Integer) }
-                print "Error: Seat Format - Non-Integer"
-                return false
-            end
-            unless seat[0].is_a? Integer
-                print "Error: Seat Format - Not an Integer"
-                return false
-            end
-            unless seat[1].is_a? Integer
-                print "Error: Seat Format - Not an Integer"
-                return false
-            end
-            total_seats += seat.inject(:*)
+
+            total_seats += seat[0] * seat[1]
         end
-        unless @passengers.is_a? Integer
-            print "Error: Passengers is not an Integer"  
-            return false
-        end
-        unless total_seats >= @passengers
-            print "Error: Too many Passengers"  
-            return false
-        else
-            print "Seats Verified"
-            return true
-        end
+        
+        return [false, "Too many Passengers"] if total_seats < @passengers
+   
+        [true, "Success"]
     end
 
     def row_maker(first, last, seat)
@@ -107,14 +90,15 @@ class SeatPlanner
         @seats.map { |seat| Array.new(seat[1]) { Array.new(seat[0]) } }
     end
 
-    def add_passengers (plane_layout, plane)
+    def add_passengers (plane_layout, plane, max_rows)
         seat_number = 1
         [["A"],["W"],["M"]].each do |seat_type|
-            for row in 0..(@max_rows-1) do
+            for row in 0..(max_rows-1) do
                 plane_layout.each_with_index do |block, b|
                     next if block[row].nil?
                     block[row].each_with_index do |seat, s|
                         next if seat != seat_type
+                        # assign number to seat else no number
                         if seat_number <= @passengers
                             plane[b][row][s] = [seat[0], seat_number]
                             seat_number+=1
@@ -138,7 +122,7 @@ class SeatPlanner
         end
 
         plane = create_plane
-        plane = add_passengers(plane_layout, plane)
+        plane = add_passengers(plane_layout, plane, @max_rows)
         
         return plane
     end

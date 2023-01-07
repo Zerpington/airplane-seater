@@ -4,9 +4,9 @@ A work exam application done with love and a bottomless coffee cup. A Junior Dev
 
 
 ## How the Application Works
-Send a post request with params (seats, passengers) as such to `/api/seat/`
+Send a `POST` request with params (seats, passengers) as such to `/api/plan_seat/`. `[server]` is usually `localhost:3000`.
 ```
-/api/seat/?seats=[[3,2], [4,3], [2,3], [3,4]]&passengers=30
+[server]/api/plan_seat/?seats=[[3,2], [4,3], [2,3], [3,4]]&passengers=30
 ```
 which will return
 ```
@@ -35,7 +35,7 @@ which will return
     ]
 }
 ```
-* Also made a simple front view at the url root of the app which you can use to get the json output
+* I also made a simple front view at the url root of the app which you can use to get the json output which can usually be found at `localhost:3000` after running the server
 
 ## Installation
 
@@ -48,3 +48,5 @@ bundle install
 ```
 rails s
 ```
+
+## Unit Test
