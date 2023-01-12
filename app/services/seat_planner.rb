@@ -2,21 +2,6 @@ class SeatPlanner
     def initialize(seats, passengers)
         @seats = seats
         @passengers = passengers
-    # def initialize
-    #     @seats = [[3,2], [4,3], [2,3], [3,4]]
-    #     # 36seats
-    #     @passengers = 30
-        # @seats = [[3, 2], [3, 2]]
-        # @passengers = 12
-
-        # @seats = [[1, 3]]
-        # @seats = [[3,4], [4,3], [2,3], [3,2]]
-        # possible test cases for later
-        # @seats = [[3,2], [4,3], [2,3], [0, 1]]
-        # @seats = [[3,2], [4,3], [2,3], [2, nil]]
-        # @seats = [[3,2], [4,3], [2,3], [2]]
-        # @seats = [[3,2], [4,3], [2,3], [1, "a"]]
-        # @seats = ["12", [4,3], [2,3], [1, "a"]]
     end
 
     def verify_seats
